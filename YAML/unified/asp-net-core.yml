@@ -1,1 +1,66 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
+trigger:
+- master
+
+stages:
+  - stage: build
+    displayName: 'master-branch-build'
+
+    #build jobs
+    jobs: 
+      - job: build
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        variables:
+          buildConfiguration: 'Release'
+
+        steps:
+        - task: DotNetCoreCLI@2
+          inputs:
+            command: 'restore'
+            projects: '**/*csproj'
+            feedsToUse: 'select'
+        - task: DotNetCoreCLI@2
+          inputs:
+            command: 'build'
+            projects: '**/*.csproj'
+            arguments: '--configuration $(BuildConfiguration)'
+        - task: DotNetCoreCLI@2
+          inputs:
+            command: 'publish'
+            publishWebProjects: true
+            arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(build.artifactstagingdirectory)'
+            ArtifactName: 'drop'
+            publishLocation: 'Container'
+
+  - stage: release
+    displayName: 'deployment-release'
+#release job
+    jobs:
+      - job: release
+        pool:
+              vmImage: 'ubuntu-latest'
+        steps:
+        - task: DownloadBuildArtifacts@0
+          inputs:
+            buildType: 'current'
+            downloadType: 'specific'
+            itemPattern: '**/*.zip'
+            downloadPath: '$(System.ArtifactsDirectory)'
+
+
+        - task: AzureRmWebAppDeployment@4
+          inputs:
+            ConnectionType: 'AzureRM'
+            azureSubscription: '<subscriptionNameHere>(<subscriptionIdHere>)'
+            appType: 'webApp'
+            WebAppName: 'appNameHere'
+            packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
