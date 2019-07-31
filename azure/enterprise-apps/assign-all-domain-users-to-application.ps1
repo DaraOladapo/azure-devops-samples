@@ -5,7 +5,8 @@ Install-Module -Name AzureAD
 $AzureAdCred = Get-Credential
 Connect-AzureAD -Credential $AzureAdCred
 
-#set search substrings
+#set search substrings 
+#TODO: Replace variables here
 $domainSearchString="*@<domainnamehere>"
 $appNameString="<applicationDisplayNameHere>"
 $roleNameString="<roleNameHere>"
