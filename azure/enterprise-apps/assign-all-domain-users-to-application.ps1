@@ -10,7 +10,8 @@ $domainSearchString="*@<domainnamehere>"
 $appNameString="<applicationDisplayNameHere>"
 $roleNameString="<roleNameHere>"
 
-$AzureADUsers = Get-AzureADUser -Top 20000 | Where {$_.UserPrincipalName -like $domainSearchString}
+#filter top 
+$AzureADUsers = Get-AzureADUser | Where {$_.UserPrincipalName -like $domainSearchString}
 # Get the service principal of the app to assign the user to
 $servicePrincipal = Get-AzureADServicePrincipal -SearchString $appNameString
 
