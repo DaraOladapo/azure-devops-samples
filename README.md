@@ -1,6 +1,6 @@
 # My Azure DevOps Samples
 
-As I learn eevery days using Azure and Azure DevOps, I will be putting some of the snippets I learn in here.
+As I learn everyday whilst using Azure and Azure DevOps, I will be putting some of the snippets I learn in here.
 
 ## Enterprise Apps
 
