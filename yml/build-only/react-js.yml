@@ -1,0 +1,30 @@
+trigger:
+    - master
+    
+    stages:
+      - stage: build
+        displayName: 'master-branch-build'
+    #build job
+        jobs:
+          - job: build
+            displayName: 'master-branch-build'
+            pool:
+              vmImage: 'ubuntu-latest'
+            steps:
+              - task: Npm@1
+                displayName: 'npm install'
+    
+              - task: Npm@1
+                displayName: 'npm run build'
+                inputs:
+                  command: custom
+                  customCommand: 'run build'
+    
+              - task: CopyFiles@2
+                displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+                inputs:
+                  SourceFolder: '$(System.DefaultWorkingDirectory)/build'
+                  TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    
+              - task: PublishBuildArtifacts@1
+                displayName: 'Publish Artifact: drop'

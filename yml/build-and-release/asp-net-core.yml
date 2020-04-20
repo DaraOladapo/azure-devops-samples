@@ -60,7 +60,7 @@ stages:
         - task: AzureRmWebAppDeployment@4
           inputs:
             ConnectionType: 'AzureRM'
-            azureSubscription: '<subscriptionNameHere>(<subscriptionIdHere>)'
+            azureSubscription: '$(SubsciptionName)($(SubscriptionID))'
             appType: 'webApp'
             WebAppName: 'appNameHere'
             packageForLinux: '$(System.ArtifactsDirectory)/**/*.zip'
